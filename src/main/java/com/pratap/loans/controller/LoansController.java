@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.pratap.loans.config.LoansServiceConfig;
-import com.pratap.loans.model.Customer;
 import com.pratap.loans.model.Loans;
 import com.pratap.loans.model.Properties;
 import com.pratap.loans.repository.LoansRepository;
@@ -12,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -29,10 +28,10 @@ public class LoansController {
     private LoansServiceConfig loansServiceConfig;
 
     @GetMapping("/myLoans")
-    public ResponseEntity<List<Loans>> getLoansDetails(@RequestBody Customer customer) {
-        List<Loans> loans = loansRepository.findByCustomerIdOrderByStartDtDesc(customer.getCustomerId());
+    public ResponseEntity<List<Loans>> getLoansDetails(@RequestParam int customerId) {
+        List<Loans> loans = loansRepository.findByCustomerIdOrderByStartDtDesc(customerId);
         if (loans != null && !loans.isEmpty())
-            return new ResponseEntity<>(loans, HttpStatus.FOUND);
+            return new ResponseEntity<>(loans, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
